@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Суші магазин</title>
+    <link rel="stylesheet" href="shopping.css">
+  </head>
+  <body>
+    <header>
+      <h1>Суші магазин</h1>
+    </header>
+    <main>
+      <section class="products">
+        <h2>Список товарів</h2>
+        <ul></ul>
+      </section>
+      <section class="cart">
+        <h2>Кошик</h2>
+        <p id="cart-summary"></p>
+        <ul id="cart-items"></ul>
+        
+      </section>
+    </main>
+    <footer>
+      <button id="return-btn" class="home-btn">Повернутися на головну</button>
+      <button id="checkout-btn" class="confirm-btn" >Оформити замовлення</button>
+
+    </footer>
+    <script>
+      
+     const products = [
+     { name: "Каліфорнійський рол з лососем", price: 150 },
+     { name: "Фірмовий рол від Юрчика", price: 169.99 },
+     { name: "Філадельфія рол", price: 120 },
+     { name: "Унагі рол", price: 160 },
+     { name: "Місо суп", price: 70 },
+     { name: "Салат з осьминогом", price: 100 }
+     ];
+
+     let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+     const cartSummaryElement = document.getElementById("cart-summary");
+     const cartItemsElement = document.getElementById("cart-items");
+     const productListElement = document.querySelector(".products ul");
+     const returnBtnElement = document.getElementById("return-btn");
+     const checkoutBtnElement = document.getElementById("checkout-btn");
+
+     function displayCart() {
+     const cartSummary = cartItems.length ?
+     `В кошику ${cartItems.length} товар(ів) на суму ${calculateTotal()} грн.` :
+     "Кошик порожній!";
+     cartSummaryElement.textContent = cartSummary;
+
+     cartItemsElement.innerHTML = "";
+     cartItems.forEach((cartItem, index) => {
+     const itemElement = document.createElement("li");
+     itemElement.textContent = `${cartItem.name} - ${cartItem.price} грн. `;
+     const removeButton = document.createElement("button");
+     removeButton.textContent = "Видалити";
+     removeButton.classList.add("remove");
+     removeButton.addEventListener("click", () => {
+     cartItems.splice(index, 1);
+     localStorage.setItem("cartItems", JSON.stringify(cartItems));
+     displayCart();
+     });
+
+     itemElement.appendChild(removeButton);
+     cartItemsElement.appendChild(itemElement);
+     });
+     }
+
+     function addToCart(index) {
+     cartItems.push(products[index]);
+     localStorage.setItem("cartItems", JSON.stringify(cartItems));
+     displayCart();
+     }
+
+     function calculateTotal() {
+     return cartItems.reduce((total, item) => total + item.price, 0);
+     }
+
+     displayCart();
+
+     products.forEach((product, index) => {
+     const liElement = document.createElement("li");
+     liElement.innerHTML = `
+     <span>${product.name}</span>
+     <span class="price">${product.price} грн</span>
+     <button class="add-to-cart" data-product="${index}">Додати до кошика</button>
+     `;
+     const addToCartButton = liElement.querySelector(".add-to-cart");
+     addToCartButton.addEventListener("click", () => {
+     const index = addToCartButton.dataset.product;
+     addToCart(index);
+     });
+     productListElement.appendChild(liElement);
+     });
+
+     returnBtnElement.addEventListener("click", () => {
+// Збереження даних корзини у localStorage
+localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      // Перенаправлення користувача на сторінку "index.html"
+     window.location.href = "index.html";
+     });
+
+     checkoutBtnElement.addEventListener("click", () => {
+     // Збереження даних корзини у localStorage
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      // Перенаправлення користувача на сторінку "purchase.html"
+     window.location.href = "purchase.html";
+     });
+
+
+  </script>
+</body>
+</html>

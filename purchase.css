@@ -1,0 +1,125 @@
+/* Обгортка форми */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    margin: auto;
+    }
+    
+    /* Стилі для елементів форми */
+    label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+    
+    input[type="text"],
+    input[type="email"] {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+    }
+    
+    button[type="button"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    }
+    
+    button[type="button"]:hover {
+    opacity: 1;
+    }
+    
+    /* Стилі для заголовка */
+    h1 {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    }
+ 
+ 
+    /* 2 кнопки */
+    .confirm-btn {
+        background-color: green;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      
+      .home-btn {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+        background-color: #f5f5f5;
+      }
+      /* валідність імейлу */
+      /* input[type="email"]:valid {
+        border: 2px solid green;
+      } */
+      
+      input[type="email"]:invalid {
+        border: 1px solid red;
+      }
+
+
+      /* валідність карти */
+      /* input[type="text"]:valid {
+        border: 2px solid green;
+      }
+      
+      input[type="text"]:invalid {
+        border: 2px solid red;
+      } */
+
+/*-------------------------------------------------*/
+      #card:invalid {
+        border: 1px solid red;
+      }
+      #email:invalid {
+        border: 1px solid red;
+      }
+      input:invalid {
+        border: 1px solid red;
+      }
+      #card:valid {
+        border: 1px solid green;
+      }
+/*-------------------------------------------------*/
+/* Если пусто */
+      input:invalid {
+        border-color: red;
+      }
+
+      
+                  
+      
+      
+      
+      
+      
+      

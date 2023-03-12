@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Суші магазин</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <main>
+    <footer>
+          <button id="checkout-btn" class="button" >Асортимент</button>
+          <button id="return-btn" class="button" >Особистий кабінет</button>
+      </footer>
+  </main>
+
+    <header class="header">
+        <div class="text-container">
+          <h1>Ласкаво прошу до мого суші магазину!</h1>
+          <p>Пропоную вибір смачних сушів та ролів з різними начинками.</p>
+          <p>Замовляйте онлайн та отримуйте знижки та подарунки!</p>
+        </div>
+      </header>
+
+  <footer>
+    <p>&copy; 2023 Суші магазин. Усі права захищені котиками.</p>
+  </footer>
+
+  <script>
+     // Перенаправлення користувача на сторінку №1
+     const checkoutBtnElement = document.getElementById("checkout-btn");
+     checkoutBtnElement.addEventListener("click", () => {
+     window.location.href = "shopping.html";
+     });
+     // Перенаправлення користувача на сторінку №2
+     const returnBtnElement = document.getElementById("return-btn");
+     returnBtnElement.addEventListener("click", () => {
+     window.location.href = "cabinet.html";
+     });
+  </script>
+
+</body>
+</html>
