@@ -2,6 +2,7 @@
 
 <html>
 <head>
+  <link rel="stylesheet" href="cabinet.css">
   <title>Кабінет користувача</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,18 +31,21 @@
 
   <script>
     function login() {
-      let email = document.getElementById("email-login").value;
-      let password = document.getElementById("password-login").value;
-      let users = JSON.parse(localStorage.getItem("users")) || [];
+  let email = document.getElementById("email-login").value;
+  let password = document.getElementById("password-login").value;
+  let users = JSON.parse(localStorage.getItem("users")) || [];
   let currentUser = users.find(user => user.email === email && user.password === password);
   if (currentUser) {
     localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    localStorage.setItem("discount", "99"); // Зберігаємо знижку у localStorage
     alert("Ви успішно увійшли в систему!");
-    window.location.href = "index.html";
+    window.location.href = "shopping.html"; // Перенаправляємо користувача на "shopping.html"
   } else {
     alert("Неправильний email або пароль!");
   }
 }
+
+
 
 function register() {
   let email = document.getElementById("email-register").value;
@@ -82,26 +86,24 @@ function register() {
 //---------------не видаляти--------------------------------------------
 
 
-const sgMail = require('@sendgrid/mail');
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-function sendConfirmationEmail(email) {
-  const msg = {
-    to: email,
-    from: 'kushpit.yu@gmail.com',
-    subject: 'Реєстрація пройшла успішно!',
-    text: 'Ви успішно зареєструвалися!',
-    html: '<p>Ви успішно зареєструвалися!</p>',
-  };
-
-  sgMail.send(msg)
-    .then(() => {
-      console.log(`Confirmation email sent to ${email}`);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const msg = {
+  to: 'test@example.com', // Change to your recipient
+  from: 'test@example.com', // Change to your verified sender
+  subject: 'Sending with SendGrid is Fun',
+  text: 'and easy to do anywhere, even with Node.js',
+  html: '<strong>and easy to do anywhere, even with Node.js</strong>',
 }
+sgMail
+  .send(msg)
+  .then(() => {
+    console.log('Email sent')
+  })
+  .catch((error) => {
+    console.error(error)
+  });
+
 
   //----------не видаляти-------------------------------------------
 
