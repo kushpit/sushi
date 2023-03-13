@@ -90,6 +90,25 @@ function register() {
     window.location.href = "shopping.html";
   }
 }
+//========================================
+// Get the current user and their discount status from localStorage
+const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+const discount = localStorage.getItem("discount");
+
+// Get the cart items from localStorage
+const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+// If the user is logged in and has a discount, apply the discount to the cart items
+if (currentUser && discount === "99") {
+  for (let i = 0; i < cartItems.length; i++) {
+    cartItems[i].price *= 0.01; // apply 99% discount
+  }
+}
+
+// Save the updated cart items to localStorage
+localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+//=======================================
 
 
 //---------------не видаляти--------------------------------------------
