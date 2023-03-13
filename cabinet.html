@@ -1,10 +1,106 @@
 <!DOCTYPE html>
+
 <html>
-  <head>
-    <title>Суші магазин</title>
-    <link rel="stylesheet" href="cabinet.css">
+<head>
+  <title>Кабінет користувача</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+  <h1>Кабінет користувача</h1>
+  <h2>Вхід</h2>
+  <form>
+    <label for="email-login">Email:</label>
+    <input type="email" id="email-login" name="email-login" required><br><br>
+    <label for="password-login">Пароль:</label>
+    <input type="password" id="password-login" name="password-login" required><br><br>
+    <button type="submit" onclick="login()">Увійти</button>
+  </form>
+  <h2>Реєстрація</h2>
+  <form>
+    <label for="email-register">Email:</label>
+    <input type="email" id="email-register" name="email-register" required><br><br>
+    <label for="password-register">Пароль:</label>
+    <input type="password" id="password-register" name="password-register" required><br><br>
+    <button type="submit" onclick="register()">Зареєструватись</button>
+  </form>
+
+  <script>
+    function login() {
+      let email = document.getElementById("email-login").value;
+      let password = document.getElementById("password-login").value;
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+  let currentUser = users.find(user => user.email === email && user.password === password);
+  if (currentUser) {
+    localStorage.setItem("currentUser", JSON.stringify(currentUser));
+    alert("Ви успішно увійшли в систему!");
+    window.location.href = "index.html";
+  } else {
+    alert("Неправильний email або пароль!");
+  }
+}
+
+function register() {
+  let email = document.getElementById("email-register").value;
+  let password = document.getElementById("password-register").value;
+  
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let existingUser = users.find(user => user.email === email);
+  if (existingUser) {
+    alert("Користувач з таким email вже зареєстрований!");
+  } else {
+    let newUser = {email: email, password: password, discount: true};
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    alert("Ви успішно зареєструвалися!");
+window.location.href = "index.html";
+}
+}
+//відправка підтвердженя про реестрацію
+function register() {
+  let email = document.getElementById("email-register").value;
+  let password = document.getElementById("password-register").value;
+  
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+  let existingUser = users.find(user => user.email === email);
+  if (existingUser) {
+    alert("Користувач з таким email вже зареєстрований!");
+  } else {
+    let newUser = {email: email, password: password, discount: true};
+    users.push(newUser);
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    alert("Ви успішно зареєструвалися!");
+
+
+    // Відправка підтвердження реєстрації на імейл
+    let nodemailer = require('nodemailer');
+    let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'kushpit.yu@gmail.com',
+          pass: '80989606817Kush'
+        }
+    });
+    let mailOptions = {
+        from: 'kushpit.yu@gmail.com',
+        to: email,
+        subject: 'Підтвердження реєстрації',
+        text: 'Ви успішно зареєструвалися на нашому сайті!'
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
+    window.location.href = "index.html";
+  }
+}
+
+</script>
 
 </body>
-</html>
+</html>"
