@@ -22,8 +22,11 @@
     <input type="email" id="email-register" name="email-register" required><br><br>
     <label for="password-register">Пароль:</label>
     <input type="password" id="password-register" name="password-register" required><br><br>
+    <label for="email-confirm">Підтвердіть email:</label>
+    <input type="email" id="email-confirm" name="email-confirm" required><br><br>
     <button type="submit" onclick="register()">Зареєструватись</button>
   </form>
+  
 
   <script>
     function login() {
@@ -43,62 +46,64 @@
 function register() {
   let email = document.getElementById("email-register").value;
   let password = document.getElementById("password-register").value;
+  let emailConfirm = document.getElementById("email-confirm").value;
+  let confirmationCode = document.getElementById("confirmation-code").value;
+
+  if (email !== emailConfirm) {
+    alert("Електронні адреси не співпадають!");
+    return;
+  }
   
   let users = JSON.parse(localStorage.getItem("users")) || [];
   let existingUser = users.find(user => user.email === email);
   if (existingUser) {
     alert("Користувач з таким email вже зареєстрований!");
   } else {
+    // Перевірка коду підтвердження
+    if (confirmationCode !== "12345") {
+      alert("Неправильний код підтвердження!");
+      return;
+    }
+    
     let newUser = {email: email, password: password, discount: true};
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
     localStorage.setItem("currentUser", JSON.stringify(newUser));
     alert("Ви успішно зареєструвалися!");
-window.location.href = "index.html";
-}
-}
-//відправка підтвердженя про реестрацію
-function register() {
-  let email = document.getElementById("email-register").value;
-  let password = document.getElementById("password-register").value;
-  
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  let existingUser = users.find(user => user.email === email);
-  if (existingUser) {
-    alert("Користувач з таким email вже зареєстрований!");
-  } else {
-    let newUser = {email: email, password: password, discount: true};
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-    alert("Ви успішно зареєструвалися!");
-
-
-    // Відправка підтвердження реєстрації на імейл
-    let nodemailer = require('nodemailer');
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'kushpit.yu@gmail.com',
-          pass: '80989606817Kush'
-        }
-    });
-    let mailOptions = {
-        from: 'kushpit.yu@gmail.com',
-        to: email,
-        subject: 'Підтвердження реєстрації',
-        text: 'Ви успішно зареєструвалися на нашому сайті!'
-    };
-    transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-    });
+    
+    // Відправлення підтвердження на електронну адресу
+    sendConfirmationEmail(email);
+    
     window.location.href = "index.html";
   }
 }
+
+
+//---------------не видаляти--------------------------------------------
+
+
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+function sendConfirmationEmail(email) {
+  const msg = {
+    to: email,
+    from: 'kushpit.yu@gmail.com',
+    subject: 'Реєстрація пройшла успішно!',
+    text: 'Ви успішно зареєструвалися!',
+    html: '<p>Ви успішно зареєструвалися!</p>',
+  };
+
+  sgMail.send(msg)
+    .then(() => {
+      console.log(`Confirmation email sent to ${email}`);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+  //----------не видаляти-------------------------------------------
 
 </script>
 
