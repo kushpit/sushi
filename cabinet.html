@@ -1,141 +1,77 @@
 <!DOCTYPE html>
-
 <html>
-<head>
-  <link rel="stylesheet" href="cabinet.css">
-  <title>Кабінет користувача</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <h1>Кабінет користувача</h1>
-  <h2>Вхід</h2>
-  <form>
+  <head>
+    <link rel="stylesheet" href="cabinet.css">
+    <title>Кабінет користувача</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <h1>Кабінет користувача</h1>
+    <h2>Вхід</h2>
+    <form>
+      <label for="email-login">Email:</label>
+      <input type="email" id="email-login" name="email-login" required><br><br>
+      <label for="password-login">Пароль:</label>
+      <input type="password" id="password-login" name="password-login" required><br><br>
+      <button type="submit" onclick="login(event)">Увійти</button>
+    </form>
+    <h2>Реєстрація</h2>
+    <form>
+      <label for="email-register">Email:</label>
+      <input type="email" id="email-register" name="email-register" required><br><br>
+      <label for="password-register">Пароль:</label>
+      <input type="password" id="password-register" name="password-register" required><br><br>
+      <label for="email-confirm">Підтвердіть email:</label>
+      <input type="email" id="email-confirm" name="email-confirm" required><br><br>
+      <button type="submit" onclick="register()">Зареєструватись</button>
+    </form>
 
-    <label for="email-login">Email:</label>
-    <input type="email" id="email-login" name="email-login" required><br><br>
-    <label for="password-login">Пароль:</label>
-    <input type="password" id="password-login" name="password-login" required><br><br>
-    <button type="submit" onclick="login(event)">Увійти</button>
+    <script>
 
-  </form>
-  <h2>Реєстрація</h2>
-  <form>
+      function login(event) {
+        event.preventDefault();
+        let email = document.getElementById("email-login").value;
+        let password = document.getElementById("password-login").value;
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let currentUser = users.find(user => user.email === email && user.password === password);
+        if (currentUser) {
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          localStorage.setItem("discount", "99");
+          alert("Ви успішно увійшли в систему!");
+          window.location.href = "shopping.html";
+        } else {
+          alert("Неправильний email або пароль!");
+        }
+      }
 
-    <label for="email-register">Email:</label>
-    <input type="email" id="email-register" name="email-register" required><br><br>
-    <label for="password-register">Пароль:</label>
-    <input type="password" id="password-register" name="password-register" required><br><br>
-    <label for="email-confirm">Підтвердіть email:</label>
-    <input type="email" id="email-confirm" name="email-confirm" required><br><br>
-    <button type="submit" onclick="register()">Зареєструватись</button>
+      function register() {
+        let email = document.getElementById("email-register").value;
+        let password = document.getElementById("password-register").value;
+        let emailConfirm = document.getElementById("email-confirm").value;
 
-  </form>
-  
-  
+        if (email !== emailConfirm) {
+          alert("Електронні адреси не співпадають!");
+          return;
+        }
 
-  <script>
-  function login(event) {
-  event.preventDefault();
-  let email = document.getElementById("email-login").value;
-  let password = document.getElementById("password-login").value;
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  let currentUser = users.find(user => user.email === email && user.password === password);
-  if (currentUser) {
-    localStorage.setItem("currentUser", JSON.stringify(currentUser));
-    localStorage.setItem("discount", "99");
-    alert("Ви успішно увійшли в систему!");
-    window.location.href = "shopping.html";
-  } else {
-    alert("Неправильний email або пароль!");
-  }
-}
-
-
-
-
-
-
-function register() {
-  let email = document.getElementById("email-register").value;
-  let password = document.getElementById("password-register").value;
-  let emailConfirm = document.getElementById("email-confirm").value;
-  let confirmationCode = document.getElementById("confirmation-code").value;
-
-  if (email !== emailConfirm) {
-    alert("Електронні адреси не співпадають!");
-    return;
-  }
-  
-  let users = JSON.parse(localStorage.getItem("users")) || [];
-  let existingUser = users.find(user => user.email === email);
-  if (existingUser) {
-    alert("Користувач з таким email вже зареєстрований!");
-  } else {
-    // Перевірка коду підтвердження
-    if (confirmationCode !== "12345") {
-      alert("Неправильний код підтвердження!");
-      return;
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let existingUser = users.find(user => user.email === email);
+        if (existingUser) {
+          alert("Користувач з таким email вже зареєстрований!");
+        } else {
+          let newUser = { email, password };
+      users.push(newUser);
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Ви успішно зареєструвались!");
+      document.getElementById("email-register").value = "";
+      document.getElementById("password-register").value = "";
+      document.getElementById("email-confirm").value = "";
     }
-    
-    let newUser = {email: email, password: password, discount: true};
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-    alert("Ви успішно зареєструвалися!");
-    
-    // Відправлення підтвердження на електронну адресу
-    sendConfirmationEmail(email);
-    
-    window.location.href = "shopping.html";
   }
-}
-//========================================
-// Get the current user and their discount status from localStorage
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-const discount = localStorage.getItem("discount");
-
-// Get the cart items from localStorage
-const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-// If the user is logged in and has a discount, apply the discount to the cart items
-if (currentUser && discount === "99") {
-  for (let i = 0; i < cartItems.length; i++) {
-    cartItems[i].price *= 0.01; // apply 99% discount
-  }
-}
-
-// Save the updated cart items to localStorage
-localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-//=======================================
-
-
-//---------------не видаляти--------------------------------------------
-
-
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey('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')
-const msg = {
-  to: 'kushpit.yu@gmail.com', // 
-  from: 'kushpit.yu@gmail.com', // 
-  subject: 'Sending with SendGrid is Fun',
-  text: 'and easy to do anywhere, even with Node.js',
-  html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-}
-sgMail
-  .send(msg)
-  .then(() => {
-    console.log('Email sent')
-  })
-  .catch((error) => {
-    console.error(error)
-  });
-
-
-  //----------не видаляти-------------------------------------------
-
+  
 </script>
+
 
 </body>
 </html>"
